@@ -4,13 +4,15 @@ const BaseEvent = require('../../utils/structures/BaseEvent');
 const guildCommandPrefixes = new Map();
 
 module.exports = class MessageEvent extends BaseEvent {
-    constructor() {
-        super('message');
-        //this.connection = StateManager.connection;
-    }
-
-    async run(client, message) {
+    constructor(...args) {
+        super(...args, 'messageCreate', { once: false });
+      }
+    
+      async run(message) {
         if (message.author.bot) return;
+
+        if (!this.client.application?.owner) await this.client.application?.fetch();
+
         //const prefix = guildCommandPrefixes.get(message.guild.id);
         const prefix = process.env.DISCORD_BOT_PREFIX;
         const usedPrefix = message.content.slice(0, prefix.length);
@@ -22,12 +24,10 @@ module.exports = class MessageEvent extends BaseEvent {
                 .slice(prefix.length)
                 .trim()
                 .split(/\s+/);
-            const command = client.commands.get(cmdName);
+            const command = this.client.commands.get(cmdName);
             if (command) {
-                command.run(client, message, cmdArgs);
+                command.run(this.client, message, cmdArgs);
             }
-        } else {
-           // message.channel.send("Prefix not understood");
         }
     }
 }

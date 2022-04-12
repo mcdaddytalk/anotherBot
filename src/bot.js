@@ -1,15 +1,18 @@
 require('dotenv').config();
-const { Client } = require('discord.js');
-const { registerCommands, registerEvents } = require('./utils/registry');
-const client = new Client();
+const colors = require('colors');
+const BaseClient = require('./utils/structures/BaseClient');
+const { registerCommands, registerEvents, registerSlashCommands } = require('./utils/registry');
+const discordModals = require('discord-modals') // Define the discord-modals package!
+const Config = require('./utils/config');
+const config = new Config();
+
+const client = new BaseClient(config);
+discordModals(client);
 
 (async () => {
-    client.sequelize = require('./database/sequelize');
-    client.commands = new Map();
-    client.events = new Map();
-    client.prefix = process.env.DISCORD_BOT_PREFIX;
     await registerCommands(client, '../commands');
     await registerEvents(client, '../events');
+    await registerSlashCommands(client, '../slashCommands');
 
     await client.login(process.env.DISCORD_BOT_TOKEN);
 })();
