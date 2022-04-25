@@ -1,0 +1,4 @@
+{
+  "todo-tree.tree.scanMode": "workspace",
+  // Runs Prettier, then ESLint
+}

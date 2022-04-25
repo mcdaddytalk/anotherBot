@@ -9,4 +9,4 @@ module.exports = class BaseCommand {
         this.guildOnly = guildOnly;
         this.usage = usage;
     }
-}
+};

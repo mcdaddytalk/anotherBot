@@ -1,7 +1,7 @@
 {
   "name": "anotherbot",
   "displayName": "AnotherBot",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -28,6 +28,10 @@
     "winston": "^3.7.2"
   },
   "devDependencies": {
+    "eslint": "^8.14.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.6.2",
     "sequelize": "^6.3.5"
   }
 }

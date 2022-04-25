@@ -1,0 +1,39 @@
+{
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "es2021": true,
+        "node": true
+    },
+    "extends": ["eslint:recommended", "plugin:prettier/recommended"],
+    "plugins": ["prettier"],
+    "rules": {
+        "prettier/prettier": ["error", {
+            "printWidth": 120,
+            "tabWidth": 4,
+            "singleQuote": true,
+            "trailingComma": "es5",
+            "bracketSpacing": true,
+            "jsxBracketSameLine": false,
+            "semi": true,
+            "useTabs": false,
+            "arrowParens": "avoid",
+            "proseWrap": "preserve",
+            "overrides": [
+                {
+                    "files": "*.json",
+                    "options": {
+                        "parser": "json"
+                    }
+                }
+            ]
+        }]
+    },
+    "parserOptions": {
+        "ecmaVersion": "latest"
+    },
+    "globals": {
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly"
+    }
+}

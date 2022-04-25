@@ -2,8 +2,7 @@ const crypto = require('crypto');
 
 module.exports = class BaseSlashCommand {
     constructor(slashOptions) {
-        this.type = 'CHAT_INPUT',
-        this.name = slashOptions.name;
+        (this.type = 'CHAT_INPUT'), (this.name = slashOptions.name);
         this.application_id = slashOptions.appid | this.genUUID();
         this.description = slashOptions.description || '';
         this.options = slashOptions.options || [];
@@ -13,6 +12,6 @@ module.exports = class BaseSlashCommand {
     genUUID = () => {
         const uuid = crypto.randomUUID().toString().replace(/-/g, '');
         // console.log(uuid);
-        return uuid
-    }
-}
+        return uuid;
+    };
+};

@@ -1,10 +1,8 @@
 const path = require('path');
-const { readdirSync } = require('fs');
+// const { readdirSync } = require('fs');
 const fs = require('fs').promises;
 const chalk = require('chalk');
-const {
-    SlashCommandBuilder
-} = require('@discordjs/builders');
+const { SlashCommandBuilder } = require('@discordjs/builders');
 const BaseCommand = require('./structures/BaseCommand');
 const BaseEvent = require('./structures/BaseEvent');
 const BaseSlashCommand = require('./structures/BaseSlashCommand');
@@ -20,11 +18,11 @@ async function registerCommands(client, dir = '') {
             if (Command.prototype instanceof BaseCommand) {
                 const cmd = new Command();
                 client.commands.set(cmd.name, cmd);
-                cmd.aliases.forEach((alias) => {
+                cmd.aliases.forEach(alias => {
                     client.commands.set(alias, cmd);
                 });
                 if (client.config.botSettings.show_loaded_commands) {
-                    client.logger.success(`Loaded Command: ${cmd.name}`)
+                    client.logger.success(`Loaded Command: ${cmd.name}`);
                 }
             }
         }
@@ -64,75 +62,116 @@ async function registerSlashCommands(client, dir = '') {
                     const slashCmd = new SlashCommand();
                     // console.log(slashCmd)
                     if (slashCmd.name && slashCmd.description) {
-                        let Command = new SlashCommandBuilder().setName(String(slashCmd.name).toLowerCase()).setDescription(slashCmd.description);
+                        let Command = new SlashCommandBuilder()
+                            .setName(String(slashCmd.name).toLowerCase())
+                            .setDescription(slashCmd.description);
                         if (slashCmd.options && slashCmd.options.length > 0) {
                             for (const option of slashCmd.options) {
                                 if (option.name && option.description) {
-                                    switch(option.type.toUpperCase()) {
+                                    switch (option.type.toUpperCase()) {
                                         case 'USER':
-                                            Command.addUserOption((op) =>
-                                                op.setName(String(option.name).replace(/\s+/g, '_').toLowerCase()).setDescription(option.description).setRequired(option.required)
+                                            Command.addUserOption(op =>
+                                                op
+                                                    .setName(String(option.name).replace(/\s+/g, '_').toLowerCase())
+                                                    .setDescription(option.description)
+                                                    .setRequired(option.required)
                                             );
                                             break;
                                         case 'INTEGER':
                                             if (option.choices && option.choices.length > 0) {
-                                                Command.addIntegerOption((op) =>
-                                                    op.setName(String(option.name).replace(/\s+/g, '_').toLowerCase()).setDescription(option.description).setRequired(option.required)
-                                                        .addChoices(option.choices.map(c => [String(c[0]).replace(/\s+/g, '_').toLowerCase(), parseInt(c[1])])),
-                                                )
+                                                Command.addIntegerOption(op =>
+                                                    op
+                                                        .setName(String(option.name).replace(/\s+/g, '_').toLowerCase())
+                                                        .setDescription(option.description)
+                                                        .setRequired(option.required)
+                                                        .addChoices(
+                                                            option.choices.map(c => [
+                                                                String(c[0]).replace(/\s+/g, '_').toLowerCase(),
+                                                                parseInt(c[1]),
+                                                            ])
+                                                        )
+                                                );
                                             } else {
-                                                Command.addIntegerOption((op) =>
-                                                    op.setName(String(option.name).replace(/\s+/g, '_').toLowerCase()).setDescription(option.description).setRequired(option.required)
-                                                )
+                                                Command.addIntegerOption(op =>
+                                                    op
+                                                        .setName(String(option.name).replace(/\s+/g, '_').toLowerCase())
+                                                        .setDescription(option.description)
+                                                        .setRequired(option.required)
+                                                );
                                             }
-                                            break; 
+                                            break;
                                         case 'STRING':
-                                            if ( option.choices && option.choices.length > 0) {
-                                                Command.addStringOption((op) =>
-                                                    op.setName(String(option.name).replace(/\s+/g, '_').toLowerCase()).setDescription(option.description).setRequired(option.required)
-                                                    .addChoices(option.choices.map(c => [String(c[0]).replace(/\s+/g, '_').toLowerCase(), String(c[1])])),
-                                                )
+                                            if (option.choices && option.choices.length > 0) {
+                                                Command.addStringOption(op =>
+                                                    op
+                                                        .setName(String(option.name).replace(/\s+/g, '_').toLowerCase())
+                                                        .setDescription(option.description)
+                                                        .setRequired(option.required)
+                                                        .addChoices(
+                                                            option.choices.map(c => [
+                                                                String(c[0]).replace(/\s+/g, '_').toLowerCase(),
+                                                                String(c[1]),
+                                                            ])
+                                                        )
+                                                );
                                             } else {
-                                                Command.addStringOption((op) =>
-                                                    op.setName(String(option.name).replace(/\s+/g, '_').toLowerCase()).setDescription(option.description).setRequired(option.required)
-                                                )   
+                                                Command.addStringOption(op =>
+                                                    op
+                                                        .setName(String(option.name).replace(/\s+/g, '_').toLowerCase())
+                                                        .setDescription(option.description)
+                                                        .setRequired(option.required)
+                                                );
                                             }
                                             break;
                                         case 'CHANNEL':
-                                            Command.addChannelOption((op) =>
-                                                op.setName(String(option.name).replace(/\s+/g, '_').toLowerCase()).setDescription(option.description).setRequired(option.required)
-                                            )
+                                            Command.addChannelOption(op =>
+                                                op
+                                                    .setName(String(option.name).replace(/\s+/g, '_').toLowerCase())
+                                                    .setDescription(option.description)
+                                                    .setRequired(option.required)
+                                            );
                                             break;
                                         case 'ROLE':
-                                            Command.addRoleOption((op) =>
-                                                op.setName(String(option.name).replace(/\s+/g, '_').toLowerCase()).setDescription(option.description).setRequired(option.required)
-                                            )
+                                            Command.addRoleOption(op =>
+                                                op
+                                                    .setName(String(option.name).replace(/\s+/g, '_').toLowerCase())
+                                                    .setDescription(option.description)
+                                                    .setRequired(option.required)
+                                            );
                                             break;
                                         case 'BOOLEAN':
-                                            Command.addBooleanOption((op) =>
-                                                op.setName(String(option.name).replace(/\s+/g, '_').toLowerCase()).setDescription(option.description).setRequired(option.required)
-                                            )
+                                            Command.addBooleanOption(op =>
+                                                op
+                                                    .setName(String(option.name).replace(/\s+/g, '_').toLowerCase())
+                                                    .setDescription(option.description)
+                                                    .setRequired(option.required)
+                                            );
                                             break;
                                         default:
-                                            console.log(`A Option is missing the Name or/and the Description of ${SlashCommand.name}`)
+                                            console.log(
+                                                `A Option is missing the Name or/and the Description of ${SlashCommand.name}`
+                                            );
                                     }
                                 }
                             }
                         }
                         // console.log(Command);
                         client.allCommands.push(Command.toJSON());
-                        client.slashCommands.set(slashCmd.name, slashCmd)
+                        client.slashCommands.set(slashCmd.name, slashCmd);
                         if (client.config.botSettings.show_loaded_slashcommands) {
-                            client.logger.success(`Loaded Slash Command: ${slashCmd.name}`)
+                            client.logger.success(`Loaded Slash Command: ${slashCmd.name}`);
                         }
                     } else {
-                        client.logger.error(`error -> missing a help.name, or help.name is not a string.`.brightRed, slashCmd);
+                        client.logger.error(
+                            `error -> missing a help.name, or help.name is not a string.`.brightRed,
+                            slashCmd
+                        );
                     }
                 }
             }
-        };
+        }
     } catch (e) {
-        console.log(chalk.bgRed(String(e.stack)))
+        console.log(chalk.bgRed(String(e.stack)));
     }
 }
 
@@ -153,20 +192,22 @@ async function registerEvents(client, dir = '') {
             client.events.set(event.name, event);
             event.emitter[event.type](event.name, (...args) => event.run(...args));
             if (client.config.botSettings.show_loaded_events) {
-                client.logger.success(`Loaded Event: ${event.name}`)
+                client.logger.success(`Loaded Event: ${event.name}`);
             }
         }
     }
 }
 
 function isClass(input) {
-    return typeof input === 'function' &&
+    return (
+        typeof input === 'function' &&
         typeof input.prototype === 'object' &&
-        input.toString().substring(0, 5) === 'class';
+        input.toString().substring(0, 5) === 'class'
+    );
 }
 
 module.exports = {
     registerCommands,
     registerEvents,
-    registerSlashCommands
+    registerSlashCommands,
 };
